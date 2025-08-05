@@ -17,6 +17,9 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * 登录功能测试
+ */
 public class LoginTest {
 
 	private WebDriver driver;

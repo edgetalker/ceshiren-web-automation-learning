@@ -1,3 +1,5 @@
+package task_4;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // 测试功能
-public class demo1 {
+public class SearchTest {
 	private WebDriver driver;
 
 	@BeforeEach

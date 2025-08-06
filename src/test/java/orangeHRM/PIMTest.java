@@ -34,7 +34,7 @@ public class PIMTest {
 		assertTrue(LoginHelper.loginAsAdmin(driver), "管理员登录失败");
 		System.out.println("✓ 登录成功");
 
-		// 准备测试数据
+		// 准备测试数据 随机后缀生成
 		String suffix = String.valueOf(new Random().nextInt(1000));
 		testFirstName = "TestUser" + suffix;
 		testLastName = "Employee" + suffix;

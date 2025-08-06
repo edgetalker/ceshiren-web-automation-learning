@@ -10,40 +10,40 @@ import java.time.Duration;
 
 public class LoginHelper {
 
-	public static boolean login(WebDriver driver, String username, String password) {
-		try {
-			driver.get("https://opensource-demo.orangehrmlive.com");
+	public static boolean login(WebDriver driver,String username,String password){
+		try{
+			//进入网站
+			driver.get("https://opensource-demo.orangehrmlive.com/");
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			//设置显式等待
+			WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(10));
 
-			// 登录
-			WebElement usernameField = wait.until(
-					ExpectedConditions.visibilityOfElementLocated(By.name("username"))
+			//登录
+			WebElement ele1=wait.until(
+					ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='username']"))
 			);
-			usernameField.clear();
-			usernameField.sendKeys(username);
+			ele1.clear();
+			ele1.sendKeys(username);
 
-			driver.findElement(By.name("password")).clear();
-			driver.findElement(By.name("password")).sendKeys(password);
+			WebElement ele2=driver.findElement(By.xpath("//input[@name='password']"));
+			ele2.clear();
+			ele2.sendKeys(password);
 
 			driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-			// 验证登录成功
-			WebElement dashboard = wait.until(
+			WebElement dashboard=wait.until(
 					ExpectedConditions.visibilityOfElementLocated(
 							By.className("oxd-topbar-header-breadcrumb-module")
 					)
 			);
-
 			return dashboard.getText().equals("Dashboard");
 
-		} catch (Exception e) {
-			System.err.println("登录失败: " + e.getMessage());
+		}catch(Exception e){
+			System.err.println("登录失败："+e.getMessage());
 			return false;
 		}
 	}
-
-	public static boolean loginAsAdmin(WebDriver driver) {
-		return login(driver, "Admin", "admin123");
+	public static boolean loginAsAdmin(WebDriver driver){
+		return login(driver,"Admin","admin123");
 	}
 }

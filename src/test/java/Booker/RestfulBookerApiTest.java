@@ -17,14 +17,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * 改进的API自动化测试套件
- * 修复了原版本的设计问题：
- * 1. 移除重复健康检查
- * 2. 确保测试独立性
- * 3. 改进错误处理
- * 4. 动态测试数据生成
- */
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("改进的API测试套件")
 public class RestfulBookerApiTest {
@@ -45,7 +38,7 @@ public class RestfulBookerApiTest {
 		RestAssured.baseURI = BASE_URL;
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
-		System.out.println("🚀 开始API测试套件");
+		System.out.println("开始API测试套件");
 
 		// 只在开始时检查一次API可用性
 		try {
@@ -54,10 +47,9 @@ public class RestfulBookerApiTest {
 					.get("/ping")
 					.then()
 					.statusCode(201);
-			System.out.println("✅ API服务可用");
+			System.out.println("API服务可用");
 		} catch (Exception e) {
-			System.err.println("❌ API服务不可用: " + e.getMessage());
-			System.err.println("💡 建议：请检查网络连接或使用替代API");
+			System.err.println("API服务不可用: " + e.getMessage());
 			// 让测试套件快速失败
 			Assumptions.assumeTrue(false, "API服务不可用，跳过测试套件");
 		}
@@ -69,7 +61,7 @@ public class RestfulBookerApiTest {
 	@Order(1)
 	@DisplayName("API健康检查")
 	public void testApiHealth() {
-		System.out.println("🏥 执行API健康检查...");
+		System.out.println("执行API健康检查...");
 
 		given()
 				.when()
@@ -78,7 +70,7 @@ public class RestfulBookerApiTest {
 				.statusCode(201)
 				.time(lessThan(5000L)); // 响应时间检查
 
-		System.out.println("✅ API健康检查通过");
+		System.out.println("API健康检查通过");
 	}
 
 	// ==================== 独立的认证测试 ====================
@@ -87,7 +79,7 @@ public class RestfulBookerApiTest {
 	@Order(2)
 	@DisplayName("用户认证测试")
 	public void testAuthentication() {
-		System.out.println("🔐 开始用户认证测试...");
+		System.out.println("开始用户认证测试...");
 
 		Map<String, String> credentials = createAuthCredentials();
 
@@ -108,7 +100,7 @@ public class RestfulBookerApiTest {
 		// 存储到实例变量，不使用静态变量
 		this.currentAuthToken = token;
 
-		System.out.println("✅ 用户认证测试通过，token: " + token.substring(0, 8) + "...");
+		System.out.println("用户认证测试通过，token: " + token.substring(0, 8) + "...");
 	}
 
 	// ==================== 独立的CRUD测试 ====================
@@ -117,7 +109,7 @@ public class RestfulBookerApiTest {
 	@Order(3)
 	@DisplayName("创建预订测试")
 	public void testCreateBooking() {
-		System.out.println("📝 开始创建预订测试...");
+		System.out.println("开始创建预订测试...");
 
 		Map<String, Object> bookingData = createTestBookingData();
 
@@ -138,14 +130,14 @@ public class RestfulBookerApiTest {
 		// 存储到实例变量
 		this.currentBookingId = bookingId;
 
-		System.out.println("✅ 创建预订测试通过，ID: " + bookingId);
+		System.out.println("创建预订测试通过，ID: " + bookingId);
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("查询预订测试")
 	public void testReadBooking() {
-		System.out.println("🔍 开始查询预订测试...");
+		System.out.println("开始查询预订测试...");
 
 		// 如果需要预订ID，就创建一个（保证测试独立性）
 		Integer bookingId = ensureBookingExists();
@@ -158,14 +150,14 @@ public class RestfulBookerApiTest {
 				.body("firstname", notNullValue())
 				.body("lastname", notNullValue());
 
-		System.out.println("✅ 查询预订测试通过");
+		System.out.println("查询预订测试通过");
 	}
 
 	@Test
 	@Order(5)
 	@DisplayName("更新预订测试")
 	public void testUpdateBooking() {
-		System.out.println("✏️ 开始更新预订测试...");
+		System.out.println("开始更新预订测试...");
 
 		// 确保有认证token和预订ID（保证测试独立性）
 		String authToken = ensureAuthTokenExists();
@@ -184,14 +176,14 @@ public class RestfulBookerApiTest {
 				.statusCode(200)
 				.body("firstname", equalTo("Updated" + testId));
 
-		System.out.println("✅ 更新预订测试通过");
+		System.out.println("更新预订测试通过");
 	}
 
 	@Test
 	@Order(6)
 	@DisplayName("删除预订测试")
 	public void testDeleteBooking() {
-		System.out.println("🗑️ 开始删除预订测试...");
+		System.out.println("开始删除预订测试...");
 
 		// 确保有认证token和预订ID
 		String authToken = ensureAuthTokenExists();
@@ -211,7 +203,7 @@ public class RestfulBookerApiTest {
 				.then()
 				.statusCode(404);
 
-		System.out.println("✅ 删除预订测试通过");
+		System.out.println("删除预订测试通过");
 	}
 
 	// ==================== 参数化测试 ====================
@@ -226,7 +218,7 @@ public class RestfulBookerApiTest {
 			"admin, wrongpassword, 错误密码"
 	})
 	public void testAuthenticationFailure(String username, String password, String scenario) {
-		System.out.println("🔒 测试认证失败场景: " + scenario);
+		System.out.println("测试认证失败场景: " + scenario);
 
 		Map<String, String> credentials = new HashMap<>();
 		credentials.put("username", username);
@@ -241,7 +233,7 @@ public class RestfulBookerApiTest {
 				.statusCode(200)
 				.body("reason", equalTo("Bad credentials"));
 
-		System.out.println("✅ " + scenario + "测试通过");
+		System.out.println(scenario + "测试通过");
 	}
 
 	// ==================== 错误处理测试 ====================
@@ -250,7 +242,7 @@ public class RestfulBookerApiTest {
 	@Order(8)
 	@DisplayName("不存在资源测试")
 	public void testNonExistentResource() {
-		System.out.println("❌ 测试访问不存在的资源...");
+		System.out.println("测试访问不存在的资源...");
 
 		int nonExistentId = 999999;
 
@@ -260,14 +252,14 @@ public class RestfulBookerApiTest {
 				.then()
 				.statusCode(404);
 
-		System.out.println("✅ 不存在资源测试通过");
+		System.out.println("不存在资源测试通过");
 	}
 
 	@Test
 	@Order(9)
 	@DisplayName("无权限操作测试")
 	public void testUnauthorizedOperation() {
-		System.out.println("🚫 测试无权限操作...");
+		System.out.println("测试无权限操作...");
 
 		Integer bookingId = ensureBookingExists();
 
@@ -278,7 +270,7 @@ public class RestfulBookerApiTest {
 				.then()
 				.statusCode(403);
 
-		System.out.println("✅ 无权限操作测试通过");
+		System.out.println("无权限操作测试通过");
 	}
 
 	// ==================== 完整流程测试 ====================
@@ -287,7 +279,7 @@ public class RestfulBookerApiTest {
 	@Order(10)
 	@DisplayName("完整业务流程测试")
 	public void testCompleteWorkflow() {
-		System.out.println("🔄 开始完整业务流程测试...");
+		System.out.println("开始完整业务流程测试...");
 
 		String workflowTestId = UUID.randomUUID().toString().substring(0, 6);
 
@@ -342,7 +334,7 @@ public class RestfulBookerApiTest {
 				.statusCode(404);
 		System.out.println("✓ 6. 删除验证成功");
 
-		System.out.println("🎉 完整业务流程测试通过！");
+		System.out.println("完整业务流程测试通过！");
 	}
 
 	// ==================== 辅助方法 - 确保测试独立性 ====================
@@ -431,6 +423,6 @@ public class RestfulBookerApiTest {
 
 	@AfterAll
 	public static void globalTearDown() {
-		System.out.println("🏁 API测试套件执行完成");
+		System.out.println("API测试套件执行完成");
 	}
 }
